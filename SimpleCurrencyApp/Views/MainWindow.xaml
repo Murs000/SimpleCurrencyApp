@@ -5,43 +5,134 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SimpleCurrencyApp"
         mc:Ignorable="d"
-        Title="Currency App" Height="350" Width="400">
+        Title="Currency App"
+        WindowState="Maximized"
+        ShowInTaskbar="False"
+        WindowStyle="None"
+        Background="#f4f4f4">
 
-    <StackPanel Margin="20">
-        <TextBlock Text="AZN Currency Summary" FontWeight="Bold" FontSize="16"/>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Header -->
+            <RowDefinition Height="*"/>
+            <!-- List -->
+            <RowDefinition Height="Auto"/>
+            <!-- Footer -->
+        </Grid.RowDefinitions>
 
-        <!-- Total Summary -->
-        <TextBlock Text="Total Count:" FontWeight="Bold"/>
-        <TextBlock Text="{Binding TotalCount}"/>
-        <TextBlock Text="Total Amount:" FontWeight="Bold"/>
-        <TextBlock Text="{Binding TotalAmount}"/>
+        <!-- Header Section -->
+        <Grid Grid.Row="0" Margin="0,0,0,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <Separator Margin="10"/>
+            <TextBlock Text="AZN Currency Summary"
+                       FontSize="20" FontWeight="Bold" Foreground="#2b5797"
+                       Grid.Row="0" Margin="0,0,0,10"/>
 
-        <!-- List of All Banknotes -->
-        <ItemsControl ItemsSource="{Binding Banknotes}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Denomination}" Width="50"/>
-                        <TextBlock Text="{Binding Count}" Width="50"/>
-                        <TextBlock Text="{Binding Total}" Width="80"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+            <!-- Total Count -->
+            <Grid Grid.Row="1" Margin="0,0,0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Total Count:" FontWeight="Bold" FontSize="14" Grid.Column="0"/>
+                <TextBlock Text="{Binding TotalCount}" FontSize="14" Grid.Column="1" Margin="10,0,0,0"/>
+            </Grid>
 
-        <Separator Margin="10"/>
+            <!-- Total Amount -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Total Amount:" FontWeight="Bold" FontSize="14" Grid.Column="0"/>
+                <TextBlock Text="{Binding TotalAmount}" FontSize="14" Grid.Column="1" Margin="10,0,0,0"/>
+            </Grid>
+        </Grid>
 
-        <!-- Last Received -->
-        <TextBlock Text="Last Received:" FontWeight="Bold"/>
-        <TextBlock Text="{Binding LastReceived}" FontSize="14" Foreground="DarkGreen"/>
+        <!-- List with Legend -->
+        <Grid Grid.Row="1" Background="White" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- Legend -->
+                <RowDefinition Height="*"/>
+                <!-- Items -->
+            </Grid.RowDefinitions>
 
-        <Separator Margin="10"/>
+            <!-- Legend Header -->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Denomination" FontWeight="Bold" Grid.Column="0"/>
+                <TextBlock Text="Count" FontWeight="Bold" Grid.Column="1"/>
+                <TextBlock Text="Total" FontWeight="Bold" Grid.Column="2"/>
+            </Grid>
 
-        <!-- Buttons -->
-        <Button Content="Receive Banknote" Command="{Binding StartReceivingCommand}" 
-            IsEnabled="{Binding CanReceive}" Margin="0,10,0,0"/>
-        <Button Content="Set Machine Ready" Command="{Binding ReadyCommand}" Margin="0,10,0,0"/>
-    </StackPanel>
+            <!-- Banknote Items -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Banknotes}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Denomination}" FontSize="14" Grid.Column="0"/>
+                                <TextBlock Text="{Binding Count}" FontSize="14" Grid.Column="1"/>
+                                <TextBlock Text="{Binding Total}" FontSize="14" Grid.Column="2"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- Footer: Last received + buttons -->
+        <Grid Grid.Row="2" Margin="0,15,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Last received -->
+            <Grid Grid.Row="0" Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Last Received:" FontWeight="Bold" FontSize="14" Grid.Column="0"/>
+                <TextBlock Text="{Binding LastReceived}" FontSize="14" Foreground="DarkGreen" Grid.Column="1"/>
+            </Grid>
+
+            <!-- Buttons -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Content="Receive Banknote"
+                        Command="{Binding StartReceivingCommand}"
+                        IsEnabled="{Binding CanReceive}"
+                        Height="40" FontSize="16" Margin="5"
+                        Background="#2b5797" Foreground="White" FontWeight="Bold"
+                        Grid.Column="0"/>
+
+                <Button Content="Set Machine Ready"
+                        Command="{Binding ReadyCommand}"
+                        Height="40" FontSize="16" Margin="5"
+                        Background="#008272" Foreground="White" FontWeight="Bold"
+                        Grid.Column="1"/>
+            </Grid>
+        </Grid>
+    </Grid>
 </Window>

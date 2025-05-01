@@ -53,11 +53,15 @@ namespace SimpleCurrencyApp.ViewModels
             int denomination = possibleDenominations[_random.Next(possibleDenominations.Length)];
             int count = _random.Next(1, 4); // random 1-3 banknotes
 
-            var existing = Banknotes.FirstOrDefault(x => x.Denomination == denomination && x.Currency == "AZN");
-            if (existing != null)
-                existing.Count += (uint)count;
-            else
-                Banknotes.Add(new BanknoteInfo { Denomination = (uint)denomination, Count = (uint)count, Currency = "AZN" });
+            //var existing = Banknotes.FirstOrDefault(x => x.Denomination == denomination && x.Currency == "AZN");
+            //if (existing != null)
+            //{
+                //existing.Count += (uint)count;
+            //}
+            //else
+            //{
+                Banknotes.Add(new BanknoteInfo { Denomination = denomination, Count = count, Currency = "AZN" });
+            //}
 
             LastReceived = $"Received: {count} x {denomination} AZN";
 

@@ -8,10 +8,10 @@ namespace SimpleCurrencyApp.Models
 {
     public class BanknoteInfo
     {
-        public uint Denomination { get; set; }
-        public uint Count { get; set; }
+        public int Denomination { get; set; }
+        public int Count { get; set; }
         public string Currency { get; set; }
 
-        public uint Total => Denomination * Count;
+        public int Total => Denomination * Count;
     }
 }
