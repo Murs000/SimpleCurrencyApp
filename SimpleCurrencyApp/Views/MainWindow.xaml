@@ -1,0 +1,47 @@
+﻿<Window x:Class="SimpleCurrencyApp.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SimpleCurrencyApp"
+        mc:Ignorable="d"
+        Title="Currency App" Height="350" Width="400">
+
+    <StackPanel Margin="20">
+        <TextBlock Text="AZN Currency Summary" FontWeight="Bold" FontSize="16"/>
+
+        <!-- Total Summary -->
+        <TextBlock Text="Total Count:" FontWeight="Bold"/>
+        <TextBlock Text="{Binding TotalCount}"/>
+        <TextBlock Text="Total Amount:" FontWeight="Bold"/>
+        <TextBlock Text="{Binding TotalAmount}"/>
+
+        <Separator Margin="10"/>
+
+        <!-- List of All Banknotes -->
+        <ItemsControl ItemsSource="{Binding Banknotes}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Denomination}" Width="50"/>
+                        <TextBlock Text="{Binding Count}" Width="50"/>
+                        <TextBlock Text="{Binding Total}" Width="80"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <Separator Margin="10"/>
+
+        <!-- Last Received -->
+        <TextBlock Text="Last Received:" FontWeight="Bold"/>
+        <TextBlock Text="{Binding LastReceived}" FontSize="14" Foreground="DarkGreen"/>
+
+        <Separator Margin="10"/>
+
+        <!-- Buttons -->
+        <Button Content="Receive Banknote" Command="{Binding StartReceivingCommand}" 
+            IsEnabled="{Binding CanReceive}" Margin="0,10,0,0"/>
+        <Button Content="Set Machine Ready" Command="{Binding ReadyCommand}" Margin="0,10,0,0"/>
+    </StackPanel>
+</Window>
