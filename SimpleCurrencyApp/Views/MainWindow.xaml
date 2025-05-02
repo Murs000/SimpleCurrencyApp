@@ -11,6 +11,15 @@
         ShowInTaskbar="False"
         WindowStyle="None"
         Background="#f4f4f4">
+    
+    <Window.Resources>
+        <CollectionViewSource x:Key="GroupedBanknotes"
+                          Source="{Binding Banknotes}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="BatchId"/>
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
+    </Window.Resources>
 
     <Grid Margin="20">
         <Grid.RowDefinitions>
@@ -61,7 +70,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Total Amount:" FontWeight="Bold" FontSize="14" Grid.Column="0"/>
-                <TextBlock Text="{Binding TotalAmount}" FontSize="14" Grid.Column="1" Margin="10,0,0,0"/>
+                <TextBlock Text="{Binding TotalAmount, StringFormat={}{0:N0} AZN}" FontSize="14" Grid.Column="1" Margin="10,0,0,0"/>
             </Grid>
         </Grid>
 
@@ -88,7 +97,28 @@
 
             <!-- Banknote Items -->
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                <ItemsControl ItemsSource="{Binding Banknotes}">
+                <ItemsControl ItemsSource="{Binding Source={StaticResource GroupedBanknotes}}">
+                    <ItemsControl.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.ContainerStyle>
+                                <Style TargetType="GroupItem">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="GroupItem">
+                                                <Border BorderBrush="Gray"
+                                            BorderThickness="1"
+                                            Margin="10"
+                                            Padding="8">
+                                                    <ItemsPresenter />
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </GroupStyle.ContainerStyle>
+                        </GroupStyle>
+                    </ItemsControl.GroupStyle>
+
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid Margin="0,5">
@@ -97,9 +127,9 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding Denomination}" FontSize="14" Grid.Column="0"/>
-                                <TextBlock Text="{Binding Count}" FontSize="14" Grid.Column="1"/>
-                                <TextBlock Text="{Binding Total}" FontSize="14" Grid.Column="2"/>
+                                <TextBlock Text="{Binding Denomination, StringFormat={}{0} AZN}" FontSize="14" Grid.Column="0"/>
+                                <TextBlock Text="{Binding Count, StringFormat={}{0} pcs}" FontSize="14" Grid.Column="1"/>
+                                <TextBlock Text="{Binding Total, StringFormat={}{0:N0} AZN}" FontSize="14" Grid.Column="2"/>
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

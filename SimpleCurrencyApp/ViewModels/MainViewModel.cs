@@ -46,21 +46,53 @@ namespace SimpleCurrencyApp.ViewModels
         }
 
         private readonly Random _random = new();
+        private Dictionary<int, int> GenerateMockedMoneyBatch()
+        {
+            int[] possibleDenominations = { 1, 5, 10, 20, 50, 100 };
+            Dictionary<int, int> batch = new();
+
+            int batchSize = _random.Next(3, 6); // Number of different denominations
+
+            for (int i = 0; i < batchSize; i++)
+            {
+                int denomination = possibleDenominations[_random.Next(possibleDenominations.Length)];
+                int count = _random.Next(1, 5); // 1 to 4 notes of that denomination
+
+                if (batch.ContainsKey(denomination))
+                    batch[denomination] += count;
+                else
+                    batch[denomination] = count;
+            }
+
+            return batch;
+        }
+        private int _currentBatchId = 1;
 
         private void ReceiveBanknotes()
         {
-            int[] possibleDenominations = { 1, 5, 10, 20, 50, 100 };
-            int denomination = possibleDenominations[_random.Next(possibleDenominations.Length)];
-            int count = _random.Next(30, 500); // random 1-3 banknotes
+            var batch = GenerateMockedMoneyBatch();
 
-            Banknotes.Add(new BanknoteInfo { Denomination = denomination, Count = count, Currency = "AZN" });
+            foreach (var entry in batch)
+            {
+                int denomination = entry.Key;
+                int count = entry.Value;
 
-            LastReceived = $"Received: {count} x {denomination} AZN";
+                Banknotes.Add(new BanknoteInfo
+                {
+                    Denomination = denomination,
+                    Count = count,
+                    Currency = "AZN",
+                    BatchId = _currentBatchId
+                });
+            }
+
+            LastReceived = $"Received batch {_currentBatchId}: {string.Join(", ", batch.Select(b => $"{b.Value} x {b.Key} AZN"))}";
+            _currentBatchId++;
 
             OnPropertyChanged(nameof(TotalAmount));
             OnPropertyChanged(nameof(TotalCount));
+            OnPropertyChanged(nameof(Banknotes));
 
-            // Disable after receiving
             CanReceive = false;
         }
 
