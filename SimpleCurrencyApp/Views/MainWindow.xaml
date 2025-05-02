@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="Currency App"
         WindowState="Maximized"
+        Topmost="True"
         ShowInTaskbar="False"
         WindowStyle="None"
         Background="#f4f4f4">
@@ -29,9 +30,19 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Text="AZN Currency Summary"
-                       FontSize="20" FontWeight="Bold" Foreground="#2b5797"
-                       Grid.Row="0" Margin="0,0,0,10"/>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="AZN Currency Summary"
+                        FontSize="20" FontWeight="Bold" Foreground="#2b5797"
+                        Grid.Column="0" Margin="0,0,0,10"/>
+                <Button Grid.Column="1" Width="30" Height="30"
+                        Content="✕" Margin="5" Padding="5" FontWeight="Bold"
+                        Click="ButtonClick" Background="Red" Foreground="White"/>
+            </Grid>
+            
 
             <!-- Total Count -->
             <Grid Grid.Row="1" Margin="0,0,0,5">

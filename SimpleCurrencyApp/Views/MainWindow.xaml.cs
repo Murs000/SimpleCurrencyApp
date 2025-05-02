@@ -22,5 +22,10 @@ namespace SimpleCurrencyApp.Views
             InitializeComponent();
             DataContext = new MainViewModel();
         }
+
+        private void ButtonClick(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
     }
 }
