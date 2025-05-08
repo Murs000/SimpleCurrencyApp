@@ -1,4 +1,6 @@
-﻿using SimpleCurrencyApp.Commands;
+﻿using Kisan.SystemController;
+using Kisan.SystemController.Models.Responses.SC;
+using SimpleCurrencyApp.Commands;
 using SimpleCurrencyApp.Models;
 using System;
 using System.Collections.Generic;
@@ -14,6 +16,11 @@ namespace SimpleCurrencyApp.ViewModels
 {
     public class MainViewModel : INotifyPropertyChanged
     {
+        private Dictionary<int, int> _batch = new();
+        private Dictionary<int, int> _rejectBatch = new();
+        //private List<string> _errors = new();  
+
+        private readonly SCManager _manager;
         public ObservableCollection<BanknoteInfo> Banknotes { get; set; } = new();
 
         private RelayCommand _startReceivingCommand;
@@ -45,34 +52,63 @@ namespace SimpleCurrencyApp.ViewModels
             set { _lastReceived = value; OnPropertyChanged(); }
         }
 
-        private readonly Random _random = new();
-        private Dictionary<int, int> GenerateMockedMoneyBatch()
+        public MainViewModel()
         {
-            int[] possibleDenominations = { 1, 5, 10, 20, 50, 100 };
-            Dictionary<int, int> batch = new();
-
-            int batchSize = _random.Next(3, 6); // Number of different denominations
-
-            for (int i = 0; i < batchSize; i++)
+            _manager = new SCManager();
+            _manager = new SCManager("COM25");
+            _manager.ConnectAsync(false);
+        }
+        public void AddBatch(SendBanknoteInformation banknoteInfo)
+        {
+            if(banknoteInfo.BanknoteError != Kisan.SystemController.Enums.BanknoteError.RECOGNITION_ERROR)
             {
-                int denomination = possibleDenominations[_random.Next(possibleDenominations.Length)];
-                int count = _random.Next(1, 5); // 1 to 4 notes of that denomination
+                int denomination = (int)banknoteInfo.BanknoteCode.GetDenomAmount();
 
-                if (batch.ContainsKey(denomination))
-                    batch[denomination] += count;
+                if (_batch.ContainsKey(denomination))
+                {
+                    _batch[denomination]++;
+                }
                 else
-                    batch[denomination] = count;
+                {
+                    _batch[denomination] = 1;
+                }
             }
+            else
+            {
+                int denomination = (int)banknoteInfo.BanknoteCode.GetDenomAmount();
 
-            return batch;
+                //_errors.Add($"BanknoteError - {banknoteInfo.BanknoteError.ToString()}");
+                //_errors.Add($"RecoError - {banknoteInfo.RecoError.ToString()}");
+
+                if (_rejectBatch.ContainsKey(denomination))
+                {
+                    _rejectBatch[denomination]++;
+                }
+                else
+                {
+                    _rejectBatch[denomination] = 1;
+                }
+            }
         }
         private int _currentBatchId = 1;
 
-        private void ReceiveBanknotes()
+        private async void ReceiveBanknotes()
         {
-            var batch = GenerateMockedMoneyBatch();
-
-            foreach (var entry in batch)
+            await _manager.SendUserReadyCompleteAsync();
+            await _manager.SendDepositStartAsync();
+        }
+        public void SetReady()
+        {
+            CanReceive = true;
+        }
+        public void SetUnReady()
+        {
+            CanReceive = false;
+        }
+        
+        public void CalculateBanknotes()
+        {
+            foreach (var entry in _batch)
             {
                 int denomination = entry.Key;
                 int count = entry.Value;
@@ -86,12 +122,34 @@ namespace SimpleCurrencyApp.ViewModels
                 });
             }
 
-            LastReceived = $"Received batch {_currentBatchId}: {string.Join(", ", batch.Select(b => $"{b.Value} x {b.Key} AZN"))}";
+            StringBuilder sb = new StringBuilder();
+
+            if (_batch.Count > 0)
+            {
+                sb.Append($"Received batch: {string.Join(", ", _batch.Select(b => $"{b.Value} x {b.Key} AZN"))}\n");
+            }
+
+            if (_rejectBatch.Count > 0)
+            {
+                sb.Append($"Rejected batch:{ string.Join(", ", _rejectBatch.Select(rB => $"{rB.Value} x {rB.Key} AZN"))}\n");
+            }
+
+            /*if (_errors.Count > 0)
+            {
+                sb.Append($"Rejected batch Errors:{string.Join(", ", _errors)}");
+            }*/
+
+            LastReceived = sb.ToString();
+            sb.Clear();
+
             _currentBatchId++;
 
             OnPropertyChanged(nameof(TotalAmount));
             OnPropertyChanged(nameof(TotalCount));
             OnPropertyChanged(nameof(Banknotes));
+
+            _batch = new();
+            _rejectBatch = new();
 
             CanReceive = false;
         }

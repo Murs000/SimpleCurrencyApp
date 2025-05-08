@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Kisan.SystemController" Version="3.0.3" />
+    <PackageReference Include="Kisan.SystemController" Version="1.0.0" />
     <PackageReference Include="Kisan.WoosimPrinter" Version="1.1.0" />
     <PackageReference Include="KisanDsp.Core" Version="2.0.1" />
     <PackageReference Include="KisanDsp.T1" Version="2.0.1" />
