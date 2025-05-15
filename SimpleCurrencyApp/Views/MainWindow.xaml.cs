@@ -60,10 +60,6 @@ namespace SimpleCurrencyApp.Views
                         }
                         break;
 
-                    case ScCommand.SC_SendCountInformation:
-                        //StatusText.Text = "Count information received.";
-                        break;
-
                     case ScCommand.SC_SendJamInformation:
                         //StatusText.Text = "Jam information received.";
                         break;
@@ -73,14 +69,29 @@ namespace SimpleCurrencyApp.Views
                         _mainViewModel.CalculateBanknotes();
                         break;
 
+                    case ScCommand.UserReadyComplete:
+                        //StatusText.Text = "Deposit ended.";
+                        //_mainViewModel.ReceiveBanknotes();
+                        break;
+
                     case ScCommand.SC_HopperOn:
                         //StatusText.Text = "Deposit Putted.";
-                        _mainViewModel.SetReady();
+                        _mainViewModel.SetReadyAsync();
                         break;
 
                     case ScCommand.SC_HopperOff:
                         //StatusText.Text = "Deposit Putted.";
-                        _mainViewModel.SetUnReady();
+                        _mainViewModel.SetUnReadyAsync();
+                        break;
+
+                    case ScCommand.SC_RejectOn:
+                        //StatusText.Text = "Reject Full.";
+                        _mainViewModel.Rejected();
+                        break;
+
+                    case ScCommand.SC_RejectOff:
+                        //StatusText.Text = "Reject Empity.";
+                        _mainViewModel.TakeRejected();
                         break;
 
                     default:
@@ -93,6 +104,7 @@ namespace SimpleCurrencyApp.Views
         private void ButtonClick(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+            _mainViewModel.Dispose();
         }
     }
 }

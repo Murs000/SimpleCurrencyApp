@@ -30,7 +30,7 @@
             <RowDefinition Height="Auto"/>
             <!-- Footer -->
         </Grid.RowDefinitions>
-
+        
         <!-- Header Section -->
         <Grid Grid.Row="0" Margin="0,0,0,10">
             <Grid.RowDefinitions>
@@ -42,14 +42,16 @@
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
+                    <ColumnDefinition/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="AZN Currency Summary"
                         FontSize="20" FontWeight="Bold" Foreground="#2b5797"
                         Grid.Column="0" Margin="0,0,0,10"/>
-                <Button Grid.Column="1" Width="30" Height="30"
+                <Button Grid.Column="2" Width="30" Height="30"
                         Content="✕" Margin="5" Padding="5" FontWeight="Bold"
                         Click="ButtonClick" Background="Red" Foreground="White" Opacity="0"/>
+                <TextBlock Grid.Column="1" Text="{Binding ConnectionStatus}" FontWeight="Bold" FontSize="14" Foreground="Green" Grid.Row="0" Grid.RowSpan="3"/>
             </Grid>
             
 
@@ -161,18 +163,15 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Content="Receive Banknote"
-                        Command="{Binding StartReceivingCommand}"
-                        IsEnabled="{Binding CanReceive}"
-                        Height="40" FontSize="16" Margin="5"
-                        Background="#2b5797" Foreground="White" FontWeight="Bold"
-                        Grid.Column="0"/>
+                <Border Background="#2b5797" Grid.Column="0" Margin="5" Padding="10">
+                    <TextBlock Text="{Binding DepositText}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                               FontSize="16" Foreground="White" FontWeight="Bold"/>
+                </Border>
 
-                <Button Content="Set Machine Ready"
-                        Command="{Binding ReadyCommand}"
-                        Height="40" FontSize="16" Margin="5"
-                        Background="#008272" Foreground="White" FontWeight="Bold"
-                        Grid.Column="1"/>
+                <Border Background="#008272" Grid.Column="1" Margin="5" Padding="10">
+                    <TextBlock Text="{Binding RejectText}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                               FontSize="16" Foreground="White" FontWeight="Bold"/>
+                </Border>
             </Grid>
         </Grid>
     </Grid>
