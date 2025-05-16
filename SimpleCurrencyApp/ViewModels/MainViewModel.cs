@@ -142,31 +142,31 @@ namespace SimpleCurrencyApp.ViewModels
         {
             try
             {
-                await _manager.SendUserReadyCompleteAsync();
+                //await _manager.SendUserReadyCompleteAsync();
                 await _manager.SendDepositStartAsync();
             }
             catch (Exception ex)
             {
                 File.AppendAllText(@"C:\Users\ADMIN\Desktop\Error.txt",$"{DateTime.Now} : {ex.Message}");
+                DepositText = ex.Message;
             }
         }
-        public void SetReadyAsync()
+        public async void SetReadyAsync()
         {
             DepositText = "Processing..";
-            ReceiveBanknotes();
         }
 
-        public void SetUnReadyAsync()
+        public async void SetUnReadyAsync()
         {
             DepositText = "Enter Deposit";
         }
 
-        public void Rejected()
+        public async void RejectedAsync()
         {
             RejectText = "Take Money From Reject Section";
         }
 
-        public void TakeRejected()
+        public async void TakeRejectedAsync()
         {
             RejectText = "";
         }

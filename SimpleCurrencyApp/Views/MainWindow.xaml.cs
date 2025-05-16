@@ -65,18 +65,18 @@ namespace SimpleCurrencyApp.Views
                         break;
 
                     case ScCommand.SC_SendDepositReadyStatus:
-                        //StatusText.Text = "Deposit ended.";
-                        _mainViewModel.CalculateBanknotes();
+                        //StatusText.Text = "Deposit Do Something.";
                         break;
 
-                    case ScCommand.UserReadyComplete:
+                    case ScCommand.SC_SendCountInformation:
                         //StatusText.Text = "Deposit ended.";
-                        //_mainViewModel.ReceiveBanknotes();
+                        _mainViewModel.CalculateBanknotes();
                         break;
 
                     case ScCommand.SC_HopperOn:
                         //StatusText.Text = "Deposit Putted.";
                         _mainViewModel.SetReadyAsync();
+                        _mainViewModel.ReceiveBanknotes();
                         break;
 
                     case ScCommand.SC_HopperOff:
@@ -86,12 +86,12 @@ namespace SimpleCurrencyApp.Views
 
                     case ScCommand.SC_RejectOn:
                         //StatusText.Text = "Reject Full.";
-                        _mainViewModel.Rejected();
+                        _mainViewModel.RejectedAsync();
                         break;
 
                     case ScCommand.SC_RejectOff:
                         //StatusText.Text = "Reject Empity.";
-                        _mainViewModel.TakeRejected();
+                        _mainViewModel.TakeRejectedAsync();
                         break;
 
                     default:
